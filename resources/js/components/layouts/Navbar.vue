@@ -1,17 +1,23 @@
 <template>
     <div>
-        <b-navbar toggleable="lg" type="dark" variant="info">
+        <b-navbar toggleable="lg" type="dark" variant="primary">
             <b-container>
-                <b-navbar-brand :to="{ path: '/'}" exact>FoodPanda</b-navbar-brand>
+                <b-navbar-brand :to="{ name: 'homepage'}" exact>FoodPanda</b-navbar-brand>
 
                 <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
                 <b-collapse id="nav-collapse" is-nav>
-                    <b-navbar-nav>
-                        <b-link :to="{ path: 'login'}" class="nav-link">Login</b-link>
-                        <b-link :to="{ path: 'register'}" class="nav-link">Register</b-link>
+                    <b-navbar-nav v-if="!loggedIn">
+                        <b-link :to="{ name: 'login'}" class="nav-link">Login</b-link>
+                        <b-link :to="{ name: 'register'}" class="nav-link">Register</b-link>
                     </b-navbar-nav>
 
+                    <b-navbar-nav v-else>
+                        <b-link to="" class="nav-link">Cities</b-link>
+                        <b-link to="" class="nav-link">Restaurants</b-link>
+                        <b-link to="" class="nav-link">Foods</b-link>
+                        <b-link :to="{ name: 'logout'}" class="nav-link">Logout</b-link>
+                    </b-navbar-nav>
                     <!-- Right aligned nav items -->
                     <b-navbar-nav class="ml-auto">
                         <b-nav-form>
@@ -28,7 +34,22 @@
 
 <script>
     export default {
-        name: "ToolBar"
+
+        data() {
+            return {
+                loggedIn: User.loggedIn(),
+            }
+        },
+
+        created() {
+            EventBus.$on('logout', () => {
+                User.logout();
+            });
+
+            EventBus.$on('login', () => {
+                this.loggedIn = User.loggedIn();
+            });
+        }
     }
 </script>
 

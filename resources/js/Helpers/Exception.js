@@ -15,4 +15,4 @@ class Exception {
     }
 }
 
-export default Exception = new Exception();
+export default Exception;

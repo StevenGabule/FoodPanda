@@ -2,7 +2,7 @@ class Token {
     isValid(token) {
         const payload = this.payload(token);
         if (payload) {
-            return !!(payload.iss === 'http://127.0.0.1:8000/api/auth/login' || 'http://127.0.0.1:8000/api/auth/signup');
+            return !!(payload.iss === 'http://127.0.0.1:8000/api/login' || 'http://127.0.0.1:8000/api/signup');
         }
         return false;
     }
@@ -28,4 +28,4 @@ class Token {
     }
 }
 
-export default Token = new Token;
+export default Token = new Token();

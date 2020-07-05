@@ -16,7 +16,8 @@ class User {
 
     logout() {
         AppStorage.clear();
-        window.location.href = "/login";
+        console.log('mount here?');
+         window.location.href = "/login";
     }
 
     name() {

@@ -1,3 +1,4 @@
+import AppStorage from "./Helpers/AppStorage";
 import router from "./router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -12,9 +13,12 @@ Vue.use(IconsPlugin);
 import User from './Helpers/User'
 window.User = User;
 
+import Exception from './Helpers/Exception'
+window.Exception = Exception;
+
 window.EventBus = new Vue();
 
-const app = new Vue({
+new Vue({
     el: '#app',
     router
 });

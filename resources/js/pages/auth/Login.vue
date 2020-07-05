@@ -1,11 +1,11 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
+    <b-container>
+        <b-row class="row justify-content-center">
             <div class="col-md-4">
-                <div class="card">
+                <div class="card mt-lg-4">
+                    <div class="card-header">Login</div>
+                    <div class="card-body">
 
-                    <div class="card-body" v-if="!secrets.length">
-                        <div class="card-header">Login</div>
 
                         <form @submit.prevent="handleLogin">
 
@@ -22,28 +22,39 @@
                             </div>
 
                             <div class="form-group">
-                                <input type="submit" name="submit" value="Log In" class="btn btn-primary btn-sm">
+<!--                                <v-button type="submit" name="login"  block variant="info" size="md">Log In</v-button>-->
+                                <b-button block type="submit" variant="primary">
+                                    <span v-if="!loading">Login</span>
+                                    <span v-else>
+                                         <b-spinner small type="grow" class="mr-2"></b-spinner> logging in...
+                                    </span>
+                                </b-button>
                             </div>
+                            <b-alert v-model="errors" variant="danger" dismissible>
+                                Invalid Credentials
+                            </b-alert>
                         </form><!-- end of form -->
                     </div><!-- end of card body -->
                 </div><!-- end of card -->
             </div><!-- end of col-md-4 -->
-        </div><!-- row -->
-    </div><!-- end of container -->
+        </b-row><!-- row -->
+    </b-container><!-- end of container -->
 </template>
 
 <script>
-    import Cookies from 'js-cookie';
-    import Token from "../../helpers/Token";
-    import AppStorage from "../../helpers/AppStorage";
+    import axios from "axios";
+    import Token from "../../Helpers/Token";
+    import AppStorage from "../../Helpers/AppStorage";
 
     export default {
         data() {
             return {
+                loading: false,
+                errors: false,
                 secrets: [],
                 formData: {
-                    email: 'ufisher@example.org',
-                    password: 'password',
+                    email: 'adas@gmail.com',
+                    password: 'pasad',
                 }
             }
         },
@@ -54,14 +65,21 @@
         },
         methods: {
             handleLogin() {
+                this.loading = true;
+                this.errors = false;
                 // send axios request to login route
                 axios.post('http://127.0.0.1:8000/api/login', this.formData)
                     .then(({data}) => {
-                        console.log(data)
                     if (Token.isValid(data.token)) {
                         AppStorage.store(data.user, data.token)
                     }
-                });
+                    EventBus.$emit('login')
+                    this.$router.push('/');
+                }).catch(err => {
+                    this.loading = false;
+                    this.errors = true;
+                    console.log(err);
+                })
             },
         }
     }
