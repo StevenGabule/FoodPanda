@@ -6,8 +6,7 @@
                     <div class="card-header">Login</div>
                     <div class="card-body">
 
-
-                        <form @submit.prevent="handleLogin">
+                        <form @submit.prevent="login">
 
                             <div class="form-group">
                                 <label for="inputEmail">Email</label>
@@ -22,7 +21,6 @@
                             </div>
 
                             <div class="form-group">
-<!--                                <v-button type="submit" name="login"  block variant="info" size="md">Log In</v-button>-->
                                 <b-button block type="submit" variant="primary">
                                     <span v-if="!loading">Login</span>
                                     <span v-else>
@@ -30,7 +28,7 @@
                                     </span>
                                 </b-button>
                             </div>
-                            <b-alert v-model="errors" variant="danger" dismissible>
+                            <b-alert v-model="error" variant="danger" dismissible>
                                 Invalid Credentials
                             </b-alert>
                         </form><!-- end of form -->
@@ -42,45 +40,33 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import Token from "../../Helpers/Token";
-    import AppStorage from "../../Helpers/AppStorage";
-
     export default {
         data() {
             return {
-                loading: false,
+                // loading: false,
                 errors: false,
                 secrets: [],
                 formData: {
-                    email: 'adas@gmail.com',
-                    password: 'pasad',
+                    email: 'johnpaulgabule@gmail.com',
+                    password: 'password',
                 }
             }
         },
-        created() {
-            if (User.loggedIn()) {
-                this.$router.push('/');
+        computed: {
+            loading() {
+                return this.$store.getters.loading
+            },
+            error() {
+                return this.$store.getters.error
             }
         },
+
         methods: {
-            handleLogin() {
-                this.loading = true;
-                this.errors = false;
-                // send axios request to login route
-                axios.post('http://127.0.0.1:8000/api/login', this.formData)
-                    .then(({data}) => {
-                    if (Token.isValid(data.token)) {
-                        AppStorage.store(data.user, data.token)
-                    }
-                    EventBus.$emit('login')
-                    this.$router.push('/');
-                }).catch(err => {
-                    this.loading = false;
-                    this.errors = true;
-                    console.log(err);
-                })
-            },
+            login() {
+                this.$store.dispatch('login', this.formData).then(() => {
+                    this.$router.push({path: '/'});
+                });
+            }
         }
     }
 </script>

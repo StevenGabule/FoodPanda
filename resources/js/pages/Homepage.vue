@@ -20,14 +20,21 @@
         components: {RestaurantCard},
         data() {
             return {
-                restaurants: []
+                /*restaurants: []*/
             }
         },
-        mounted() {
-            axios.get("http://127.0.0.1:8000/api/restaurants").then(res => {
+
+        async mounted() {
+            await this.$store.dispatch('loadRestaurants', 'http://127.0.0.1:8000/api/restaurants')
+          /*  axios.get("http://127.0.0.1:8000/api/restaurants").then(res => {
                 console.log(res.data.data)
                 this.restaurants = res.data.data;
-            }).catch(error => console.error(error.response.data.errors));
+            }).catch(error => console.error(error.response.data.errors));*/
+        },
+        computed: {
+            restaurants() {
+                return this.$store.getters.restaurants;
+            }
         }
     }
 </script>

@@ -1,14 +1,19 @@
-import AppStorage from "./Helpers/AppStorage";
+import Vuex from 'vuex';
 import router from "./router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 require('./bootstrap');
 
 window.Vue = require('vue');
+import storeData from './store/index';
 
-Vue.component('app', require('./pages').default);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
+Vue.use(Vuex);
+
+const store = new Vuex.Store(
+    storeData
+)
 
 import User from './Helpers/User'
 window.User = User;
@@ -18,7 +23,10 @@ window.Exception = Exception;
 
 window.EventBus = new Vue();
 
+Vue.component('app', require('./pages').default);
+
 new Vue({
     el: '#app',
-    router
+    router,
+    store,
 });

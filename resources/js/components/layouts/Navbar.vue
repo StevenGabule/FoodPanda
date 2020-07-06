@@ -7,7 +7,7 @@
                 <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
                 <b-collapse id="nav-collapse" is-nav>
-                    <b-navbar-nav v-if="!loggedIn">
+                    <b-navbar-nav v-if="!isAuthenticated">
                         <b-link :to="{ name: 'login'}" class="nav-link">Login</b-link>
                         <b-link :to="{ name: 'register'}" class="nav-link">Register</b-link>
                     </b-navbar-nav>
@@ -34,20 +34,14 @@
 
 <script>
     export default {
-
-        data() {
-            return {
-                loggedIn: User.loggedIn(),
+        computed: {
+            isAuthenticated() {
+                return this.$store.getters.isAuthenticated;
             }
         },
-
         created() {
             EventBus.$on('logout', () => {
                 User.logout();
-            });
-
-            EventBus.$on('login', () => {
-                this.loggedIn = User.loggedIn();
             });
         }
     }
